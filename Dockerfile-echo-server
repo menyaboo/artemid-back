@@ -1,0 +1,14 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Копируем package.json и установим зависимости
+COPY package*.json ./
+RUN npm install
+
+# Копируем остальные файлы
+COPY . .
+
+EXPOSE 6001
+
+CMD ["npx", "laravel-echo-server", "start"]
