@@ -10,11 +10,11 @@ class TypeServiceController extends Controller
 {
     public function index(Request $request)
     {
-        $query = TypeService::query();
+        $query = TypeService::query()->with('category');
 
         if ($request->has('id')) {
-            $categoryId = $request->input('id');
-            $query->where('category_id', $categoryId);
+          $categoryId = $request->input('id');
+          $query->where('category_id', $categoryId);
         }
 
         return $query->get();

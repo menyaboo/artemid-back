@@ -42,7 +42,7 @@ Route::controller(\App\Http\Controllers\CategoryServiceController::class)->group
             Route::middleware('role:admin')->group(function () {
                 Route::post('/store', 'store');
                 Route::post('/{categoryService}/update', 'update');
-                Route::get('/{categoryService}/destroy', 'destroy');
+                Route::post('/{categoryService}/destroy', 'destroy');
             });
         });
     });
@@ -56,7 +56,7 @@ Route::controller(\App\Http\Controllers\TypeServiceController::class)->group(fun
             Route::middleware('role:admin')->group(function () {
                 Route::post('/store', 'store');
                 Route::post('/{typeService}/update', 'update');
-                Route::get('/{typeService}/destroy', 'destroy');
+                Route::post('/{typeService}/destroy', 'destroy');
             });
         });
     });
@@ -88,7 +88,7 @@ Route::controller(\App\Http\Controllers\AppealController::class)->group(function
             });
 
             Route::middleware('role:admin')->group(function () {
-                Route::get('/destroy', 'destroy');
+                Route::post('/destroy', 'destroy');
             });
 
         });
