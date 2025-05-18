@@ -80,10 +80,10 @@ Route::controller(\App\Http\Controllers\AppealController::class)->group(function
             Route::get('/personal', 'personal');
             Route::get('/search', 'search');
             Route::post('/', 'store');
+            Route::get('/{appeal}', 'show');
 
             Route::middleware('role:admin|manager')->group(function () {
                 Route::get('/', 'index');
-                Route::get('/{appeal}', 'show');
                 Route::post('/{appeal}/update', 'update');
             });
 
@@ -112,7 +112,7 @@ Route::controller(\App\Http\Controllers\NotificationController::class)->group(fu
     Route::prefix('notification')->group(function () {
         Route::middleware('auth:api')->group(function () {
             Route::get('/', 'index');
-            Route::post('/read', 'markAsRead');
+            Route::post('/{notification}/read', 'markAsRead');
         });
     });
 });

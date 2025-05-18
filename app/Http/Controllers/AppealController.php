@@ -62,19 +62,47 @@ class AppealController extends Controller
 
     public function show(Appeal $appeal)
     {
-        return $appeal;
+        $appeal->load(['status', 'type.category', 'user']);
+
+        return [
+            ...$appeal->makeHidden(['status_id', 'type_id', 'user_id'])->toArray(),
+            'status' => $appeal->status,
+            'type' => [
+                ...$appeal->type->makeHidden(['category_id'])->toArray(),
+                'category' => $appeal->type->category,
+            ],
+            'user' => $appeal->user,
+        ];
     }
 
-    public function update(Request $request, Appeal $appeal)
+    public function update(Request $request, Appeal $appeal, NotificationService $notifier)
     {
+        // Валидация данных
         $data = $request->validate([
             'message' => ['exclude'],
             'type_id' => ['exclude'],
             'user_id' => ['exclude'],
-            'status_id' => ['required'],
+            'status_id' => ['required', 'exists:status_services,id'],
         ]);
 
+        // Сохраняем старый статус для сравнения (если нужно)
+        $oldStatusId = $appeal->status_id;
+
+        // Обновляем обращение
         $appeal->update($request->all());
+
+        // Если статус изменился
+        if ($oldStatusId !== $appeal->status_id) {
+            // Получаем имя нового статуса
+            $newStatusName = $appeal->status->name; // Предполагается, что связь `status` загружена или доступна
+
+            // Отправляем уведомление пользователю
+            $notifier->notifyStatusChanged(
+                $appeal->user_id,
+                $appeal->id,
+                $newStatusName
+            );
+        }
 
         return $appeal;
     }

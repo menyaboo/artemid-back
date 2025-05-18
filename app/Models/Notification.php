@@ -14,6 +14,6 @@ class Notification extends Model
         'type',
         'message',
         'related_id',
-        'read_at'
+        'is_read'
     ];
 }
